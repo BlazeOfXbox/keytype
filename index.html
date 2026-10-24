@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#323437">
+  <title>Keytype — typing test</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Keytype home"><span class="brand-mark">⌨</span><span>keytype</span><small>beta</small></a>
+      <nav class="nav-links" aria-label="Main navigation">
+        <button class="nav-btn active" data-view="test" title="Typing test">⌁ <span>test</span></button>
+        <button class="nav-btn" data-view="stats" title="Statistics">▥ <span>stats</span></button>
+        <button class="nav-btn" data-view="settings" title="Settings">⚙ <span>settings</span></button>
+      </nav>
+      <div class="profile"><span class="profile-dot"></span><input id="profileName" maxlength="20" aria-label="Local profile name" value="typist" title="Local profile name"></div>
+    </header>
+
+    <main>
+      <section id="testView" class="view">
+        <div class="mode-bar">
+          <div class="mode-group" aria-label="Test mode">
+            <button class="chip active" data-mode="time">◷ time</button>
+            <button class="chip" data-mode="words">≡ words</button>
+            <button class="chip" data-mode="quote">❞ quote</button>
+            <button class="chip" data-mode="zen">☼ zen</button>
+          </div>
+          <div class="mode-group options-group" id="durationOptions" aria-label="Duration">
+            <button class="chip" data-duration="15">15</button><button class="chip active" data-duration="30">30</button><button class="chip" data-duration="60">60</button><button class="chip" data-duration="120">120</button>
+          </div>
+          <div class="mode-group options-group hidden" id="wordOptions" aria-label="Word count">
+            <button class="chip" data-wordcount="10">10</button><button class="chip active" data-wordcount="25">25</button><button class="chip" data-wordcount="50">50</button><button class="chip" data-wordcount="100">100</button>
+          </div>
+          <div class="mode-group options-group" aria-label="Difficulty"><button class="chip active" data-difficulty="normal">normal</button><button class="chip" data-difficulty="easy">easy</button><button class="chip" data-difficulty="hard">hard</button></div>
+        </div>
+
+        <div class="test-area">
+          <div class="live-stats" id="liveStats"><div><span class="stat-label">wpm</span><strong id="liveWpm">0</strong></div><div><span class="stat-label">accuracy</span><strong id="liveAccuracy">100%</strong></div><div><span class="stat-label" id="timerLabel">time</span><strong id="liveTimer">30</strong></div></div>
+          <div id="wordDisplay" class="word-display" tabindex="0" role="button" aria-label="Typing text. Click here and start typing."></div>
+          <textarea id="typingInput" class="typing-input" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Type the displayed text" placeholder="Click the text and start typing…"></textarea>
+          <div class="test-hint"><span><kbd>tab</kbd> + <kbd>enter</kbd> restart</span><span><kbd>esc</kbd> reset</span><span id="modeHint">Start typing to begin</span></div>
+          <div class="test-actions"><button class="primary-btn" id="restartBtn">↻ restart test</button><label class="toggle"><input id="punctuationToggle" type="checkbox"><span></span> punctuation</label><label class="toggle"><input id="numbersToggle" type="checkbox"><span></span> numbers</label></div>
+        </div>
+
+        <section id="resultPanel" class="result-panel hidden" aria-live="polite">
+          <div class="result-heading"><div><span class="eyebrow">test complete</span><h2>Nice work.</h2></div><button id="resultRestart" class="primary-btn">↻ try again</button></div>
+          <div class="result-grid"><div class="result-main"><span class="stat-label">wpm</span><strong id="resultWpm">0</strong><span id="resultRaw">raw 0</span></div><div><span class="stat-label">accuracy</span><strong id="resultAccuracy">100%</strong></div><div><span class="stat-label">characters</span><strong id="resultChars">0/0/0/0</strong></div><div><span class="stat-label">consistency</span><strong id="resultConsistency">—</strong></div></div>
+          <p id="saveMessage" class="muted"></p>
+        </section>
+      </section>
+
+      <section id="statsView" class="view hidden">
+        <div class="page-heading"><div><span class="eyebrow">your progress</span><h1>Statistics</h1></div><button id="clearHistoryBtn" class="quiet-btn">Clear history</button></div>
+        <div class="summary-grid"><article class="summary-card"><span class="stat-label">tests completed</span><strong id="totalTests">0</strong></article><article class="summary-card"><span class="stat-label">best wpm</span><strong id="bestWpm">0</strong></article><article class="summary-card"><span class="stat-label">average wpm</span><strong id="averageWpm">0</strong></article><article class="summary-card"><span class="stat-label">average accuracy</span><strong id="averageAccuracy">—</strong></article></div>
+        <div class="panel"><div class="panel-heading"><h2>Recent tests</h2><span class="muted">Saved in this browser</span></div><div class="table-wrap"><table><thead><tr><th>date</th><th>mode</th><th>wpm</th><th>accuracy</th><th>duration</th></tr></thead><tbody id="historyRows"><tr><td colspan="5" class="empty-row">Finish a test to see your history.</td></tr></tbody></table></div></div>
+        <div class="panel"><div class="panel-heading"><h2>Local leaderboard</h2><span class="muted">This browser only</span></div><div id="leaderboard" class="leaderboard"></div></div>
+      </section>
+
+      <section id="settingsView" class="view hidden">
+        <div class="page-heading"><div><span class="eyebrow">make it yours</span><h1>Settings</h1></div></div>
+        <div class="settings-grid">
+          <div class="panel settings-panel"><h2>Appearance</h2><label class="setting-row"><span><strong>Theme</strong><small>Choose your typing colours</small></span><select id="themeSelect"><option value="serika">Serika Dark</option><option value="dark">Dark</option><option value="light">Light</option><option value="ocean">Ocean</option><option value="matrix">Matrix</option><option value="dracula">Dracula</option></select></label><label class="setting-row"><span><strong>Font size</strong><small>Typing text size</small></span><select id="fontSizeSelect"><option value="22">Small</option><option value="28" selected>Medium</option><option value="34">Large</option><option value="40">Extra large</option></select></label><label class="setting-row"><span><strong>Smooth animations</strong><small>Animate typing feedback</small></span><input id="animationToggle" type="checkbox" checked></label></div>
+          <div class="panel settings-panel"><h2>Typing</h2><label class="setting-row"><span><strong>Typing sounds</strong><small>Soft keyboard sound on correct keys</small></span><input id="soundToggle" type="checkbox"></label><label class="setting-row"><span><strong>Sound volume</strong><small>Sound effect volume</small></span><input id="soundVolume" type="range" min="0" max="100" value="20"></label><label class="setting-row"><span><strong>Punctuation by default</strong><small>Add punctuation to generated words</small></span><input id="defaultPunctuation" type="checkbox"></label><label class="setting-row"><span><strong>Numbers by default</strong><small>Add numbers to generated words</small></span><input id="defaultNumbers" type="checkbox"></label><label class="setting-row"><span><strong>Difficulty</strong><small>Default word selection</small></span><select id="defaultDifficulty"><option value="easy">Easy</option><option value="normal" selected>Normal</option><option value="hard">Hard</option></select></label></div>
+          <div class="panel settings-panel"><h2>Word lists</h2><label class="setting-row stacked"><span><strong>Custom words</strong><small>Comma or space-separated words. Leave blank to use built-in lists.</small></span><textarea id="customWords" rows="3" placeholder="nebula, keyboard, velocity, focus"></textarea></label><label class="setting-row stacked"><span><strong>Custom quote</strong><small>Used in quote mode. Leave blank for built-in quotes.</small></span><textarea id="customQuote" rows="3" placeholder="The quick brown fox jumps over the lazy dog."></textarea></label><button id="saveSettingsBtn" class="primary-btn">Save settings</button><p id="settingsMessage" class="muted"></p></div>
+          <div class="panel settings-panel"><h2>Local profile & data</h2><label class="setting-row stacked"><span><strong>Profile name</strong><small>A local label for your saved results. This is not an online account.</small></span><input id="settingsProfile" maxlength="20" placeholder="typist"></label><div class="button-row"><button id="exportBtn" class="quiet-btn">Export history</button><label class="quiet-btn import-label">Import history<input id="importInput" type="file" accept="application/json" hidden></label></div><p class="muted">Your settings and personal bests are stored in your browser's local storage. Clearing browser data can erase them.</p></div>
+        </div>
+      </section>
+    </main>
+    <footer><span><b>keytype</b> <span class="muted">· a little practice goes a long way</span></span><span class="muted">HTML · CSS · JavaScript · local-first</span></footer>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
